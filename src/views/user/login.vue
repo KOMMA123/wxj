@@ -2,7 +2,7 @@
 	<div class="center">
 		<a-form class="loginForm" :form="form" @submit="handleSubmit">
 			<a-form-item>
-				<a-input v-decorator="['userName',{rules:[{required: true, message: 'Please input your username!'}]}]" placeholder="username">
+				<a-input v-decorator="['username',{rules:[{required: true, message: 'Please input your username!'}]}]" placeholder="username">
 					<a-icon slot="prefix" type="user" style="color: rgba(0,0,0,.25)" />
 				</a-input>
 			</a-form-item>
@@ -25,6 +25,7 @@
 	import {
 		mapActions
 	} from 'vuex'
+	import md5 from 'md5'
 	export default {
 		data() {
 			return {
@@ -40,9 +41,10 @@
 				e.preventDefault();
 				this.form.validateFields((err, values) => {
 					if (!err) {
-						this.Login(values).then(res => {
-							this.$router.push({"name":"home"})
-							console.log('Received values of form: ', values);
+						this.Login({...values,password:md5(values.password)}).then(res => {
+							console.log(res)
+							// this.$router.push({"name":"home"})
+							// console.log('Received values of form: ', values);
 						})
 					}
 				});
